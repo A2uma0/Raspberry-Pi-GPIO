@@ -33,3 +33,4 @@ Set every GPIO pin available on the Board to output and high.
 
 *Example:*  
 `python3 setAll.py`
+
