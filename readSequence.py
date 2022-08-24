@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
-import sys, getopt
 from datetime import datetime
 from time import sleep
 import os
