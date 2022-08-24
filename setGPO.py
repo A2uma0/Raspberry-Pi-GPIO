@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
-import sys, getopt
+import argparse
 GPIO.setmode(GPIO.BOARD)
 
+parser = argparse.ArgumentParser(description='Set GPIO pin to output and set it\'s value')
+parser.add_argument('--pin', '-p', type=int, help='The pin to set', required=True)
+parser.add_argument('--state', '-s', type=str, help='The state to set', required=True)
+args = parser.parse_args()
 
 
 def setGPO(num, state):
@@ -25,36 +29,20 @@ def setGPO(num, state):
         exit()
 
 
-def main(argv):
-    if len(sys.argv) <= 1:
-        print('help: setGPO.py -h')
-        print('usage: setGPO.py -p (--pin) <pinnumber> -s (--state) <high/low>')
+def main():
+    pin = args.pin
+    statearg = args.state
+    if statearg == "High" or statearg == "high":
+        statearg = GPIO.HIGH
+    elif statearg == "Low" or statearg == "low":
+        statearg = GPIO.LOW
     else:
-        pass
-    try:
-        opts, args = getopt.getopt(argv,'hp:s:', ["pin=", "state="])
-    except getopt.GetoptError:
-        print('usage: setGPO.py -p (--pin) <pinnumber> -s (--state) <high/low>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print("Will set the specified pin to output and set it to the specified state")
-            print('usage: setGPO.py -p (--pin) <pinnumber> -s (--state) <high/low>')
-            sys.exit()
-        elif opt in ("-p", "--pin"):
-            num = int(arg)
-        elif opt in ("-s", "--state"):
-            if arg == "High" or arg == "high":
-                state = GPIO.HIGH
-            elif arg == "Low" or arg == "low":
-                state = GPIO.LOW
-            else:
-                print(" Not a valid state!")
-            setGPO(num, state)
+        print(" Not a valid state!")
+    setGPO(pin, statearg)
 
 if __name__ == "__main__":
     try:
-        main(sys.argv[1:])
+        main()
     except KeyboardInterrupt:
         print("Interuppted!")
         exit()

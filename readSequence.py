@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
-import sys, getopt
 from datetime import datetime
 from time import sleep
 import os
 GPIO.setmode(GPIO.BOARD)
+
+parser = argparse.ArgumentParser(description='Set GPIO pin to input and read it\'s value')
+parser.add_argument('--pin', '-p', type=int, help='The pin to set', required=True)
+parser.add_argument('--time', '-p', type=int, help='How long to log the value for', required=True)
+parser.add_argument('--delay', '-d', type=int, help="Delay between logs", required=True)
+args = parser.parse_args()
+
+pin = args.pin
+timearg = args.time
+delayarg = args.delay
 
 
 
@@ -34,33 +43,12 @@ def readSequence(num, time, delay):
             sleep(delay)
 
 
-def main(argv):
-    if len(sys.argv) <= 1:
-        print('help: setSequence.py -h')
-        print('usage: setSequence.py -p (--pin) <pinnumber> -t (--time) <seconds> -d (--delay) <seconds>')
-    else:
-        pass
-    try:
-        opts, args = getopt.getopt(argv,'hp:t:d:', ["pin=", "time=", "delay="])
-    except getopt.GetoptError:
-        print('usage: setSequence.py -p (--pin) <pinnumber> -t (--time) <seconds> -d (--delay) <seconds>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print("Will set the specified pin to input and read it's value on a timer with a delay between logs. \nSaves all the logs with timestamps to log.txt")
-            print('usage: setSequence.py -p (--pin) <pinnumber> -t (--time) <seconds> -d (--delay) <seconds>')
-            sys.exit()
-        elif opt in ("-p", "--pin"):
-            num = int(arg)
-        elif opt in ("-t", "--time"):
-            time = int(arg)
-        elif opt in ("-d", "--delay"):
-            delay = float(arg)
-            readSequence(num, time, delay)
+def main():
+        readSequence(pin, timearg, delayarg)
 
 if __name__ == "__main__":
     try:
-        main(sys.argv[1:])
+        main()
     except KeyboardInterrupt:
         print("Interuppted!")
         exit()

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
-import sys, getopt
+import argparse
 GPIO.setmode(GPIO.BOARD)
 
+parser = argparse.ArgumentParser(description='Set GPIO pin to input and read it\'s value')
+parser.add_argument('--pin', '-p', type=int, help='The pin to set', required=True)
+args = parser.parse_args()
+
+pin = args.pin
 
 def setGPI(num):
     # set up input channel without pull-up
@@ -22,29 +27,12 @@ def setGPI(num):
     else:
         print(f" Pin {num} is LOW!")
 
-def main(argv):
-    if len(sys.argv) <= 1:
-        print('help: setGPI.py -h')
-        print('usage: setGPI.py -p (--pin) <pinnumber>')
-    else:
-        pass
-    try:
-        opts, args = getopt.getopt(argv,'hp:', ["pin="])
-    except getopt.GetoptError:
-        print('usage: setGPI.py -p <pinnumber>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print("Will set the specified pin to input and read it's value")
-            print('usage: setGPI.py -p (--pin) <pinnumber>')
-            sys.exit()
-        elif opt in ("-p", "--pin"):
-            num = arg
-            setGPI(int(num)) 
+def main():
+        setGPI(pin) 
 
 if __name__ == "__main__":
     try:
-        main(sys.argv[1:])
+        main()
     except KeyboardInterrupt:
         print("Interuppted!")
         exit()
